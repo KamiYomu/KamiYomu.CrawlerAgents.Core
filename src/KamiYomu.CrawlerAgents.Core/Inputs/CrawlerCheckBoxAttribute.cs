@@ -13,11 +13,15 @@ namespace KamiYomu.CrawlerAgents.Core.Inputs
     public class CrawlerCheckBoxAttribute : Attribute
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="CrawlerCheckBoxAttribute"/> class.
+        /// Initializes a new instance of the <see cref="CrawlerCheckBoxAttribute"/> class, representing a configurable checkbox option
+        /// used in crawler metadata or filtering. This attribute supports labeled grouping and multiple selectable flags.
         /// </summary>
-        /// <param name="name">The internal identifier for this option (e.g., "contentRating").</param>
-        /// <param name="legend">A descriptive label or explanation for the option.</param>
-        /// <param name="options">One or more flags or identifiers associated with this option (e.g., "general", "safe", "14") keep in mind you will receive the format value as "<see cref="Name"/>.<see cref="Options"/>" .</param>
+        /// <param name="name">The internal key or identifier for this option (e.g., "contentRating").</param>
+        /// <param name="legend">A human-readable label or description that explains the purpose of the checkbox group.</param>
+        /// <param name="options">
+        /// A set of selectable values or flags associated with this option (e.g., "general", "safe", "14").
+        /// The final value will be formatted as list of <c>Name.OptionSelected</c> to support structured identification.
+        /// </param>
         public CrawlerCheckBoxAttribute(string name, string legend, string[] options)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));

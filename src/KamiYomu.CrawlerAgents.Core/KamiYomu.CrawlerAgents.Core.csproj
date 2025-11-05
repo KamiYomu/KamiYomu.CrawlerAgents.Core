@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<LangVersion>13</LangVersion>
+		<Title>KamiYomu Crawler Agent Core</Title>
+		<Description>A foundational library for building, extending, and integrating custom crawler agents within the KamiYomu ecosystem. Provides essential abstractions, utilities, and lifecycle hooks to streamline agent development and ensure seamless interoperability across the platform.</Description>
+		<Copyright>© KamiYomu. Licensed under GPL-3.0.</Copyright>
+		<PackageProjectUrl>https://github.com/KamiYomu/KamiYomu.CrawlerAgents.Core</PackageProjectUrl>
+		<PackageIcon>Resources/logo.png</PackageIcon>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="..\..\README.md" Link="README.md" Pack="true" PackagePath="" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="HtmlAgilityPack" Version="1.12.4"  />
+		<PackageReference Include="PuppeteerSharp" Version="20.2.4"  />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="Resources\logo.png" Pack="true" PackagePath="Resources/logo.png">
+	  </None>
+	</ItemGroup>
+</Project>

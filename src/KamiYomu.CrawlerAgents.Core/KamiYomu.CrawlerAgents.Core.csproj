@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>netstandard2.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<LangVersion>13</LangVersion>
 		<Title>KamiYomu Crawler Agent Core</Title>
 		<Description>A foundational library for building, extending, and integrating custom crawler agents within the KamiYomu ecosystem. Provides essential abstractions, utilities, and lifecycle hooks to streamline agent development and ensure seamless interoperability across the platform.</Description>

@@ -9,6 +9,10 @@
 		<PackageProjectUrl>https://github.com/KamiYomu/KamiYomu.CrawlerAgents.Core</PackageProjectUrl>
 		<PackageIcon>Resources/logo.png</PackageIcon>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<Authors>KamiYomu</Authors>
+		<RepositoryUrl>https://github.com/KamiYomu/KamiYomu.CrawlerAgents.Core</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageTags>kamiyomu;crawler agents;manga download</PackageTags>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)' == 'Debug'">
@@ -20,8 +24,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="HtmlAgilityPack" Version="1.12.4"  />
-		<PackageReference Include="PuppeteerSharp" Version="20.2.4"  />
+		<PackageReference Include="HtmlAgilityPack" Version="1.12.4" />
+		<PackageReference Include="PuppeteerSharp" Version="20.2.4" />
 	</ItemGroup>
 
 	<ItemGroup>

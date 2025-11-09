@@ -1,95 +1,126 @@
-﻿KamiYomu Crawler Agent Core – Create Crawler Agents for KamiYomu
-====================================================
+﻿KamiYomu Crawler Agent Core — Create Crawler Agents for KamiYomu
+================================================================
 
-A foundational library for building, extending, and integrating custom crawler agents within the KamiYomu ecosystem. It provides essential abstractions, utilities, and lifecycle hooks to streamline agent development and ensure seamless interoperability across the platform.
+A small foundational library and set of conventions for building, extending, and integrating custom crawler agents within the KamiYomu ecosystem. It provides lifecycle abstractions, utilities, and optional integrations for scraping HTML and controlling headless browsers.
 
-Features
---------
+Key features
+------------
+- Agent lifecycle hooks for crawling and metadata extraction.
+- Integration-ready with the KamiYomu runtime.
+- Built-in examples and helpers for `HtmlAgilityPack` and `PuppeteerSharp`.
+- Compatible with `.net-8.0` to maximize host compatibility (works from modern .NET SDKs, including .NET 8).
 
-- Agent lifecycle hooks for crawling and metadata extraction
-- Integration-ready with the KamiYomu runtime
-- Built-in support for HtmlAgilityPack and PuppeteerSharp
-- Compatible with .NET Standard 2.0 for broad platform support
+Quick start
+-----------
+1. Create a class library project (target `net-8.0` for widest compatibility):
+    
+    Create project:
+    
+        dotnet new classlib -n MyKamiYomuAgent -f net-8.0
 
-Getting Started
----------------
+2. Add NuGet.Config in the solution folder to ensure standard feeds:
 
-### Prerequisites
+    NuGet.Config content (place next to your `.sln`):
+    
+        <?xml version="1.0" encoding="utf-8"?>
+        <configuration>
+          <packageSources>
+            <clear />
+            <add key="nuget.org" value="https://api.nuget.org/v3/index.json" />
+          </packageSources>
+        </configuration>
 
-- .NET SDK 8.0
-- Git (for cloning the repository)
+3. Install the core package:
 
-### How to Create and Deploy a Custom KamiYomu Crawler Agent
- 
-1. Create a Class Library Project
-2. Start by creating a new Class Library targeting .NET Standard 2.0 to ensure compatibility with the KamiYomu ecosystem.
-3. Add a Nuget.Config file to the directory of your solution (.sln file) with the following content to include the KamiYomu NuGet feed:
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<configuration>
-  <packageSources>
-    <clear />
-    <add key="nuget.org" value="https://api.nuget.org/v3/index.json" />
-    <add key="KamiYomu-github" value="https://nuget.pkg.github.com/KamiYomu/index.json" />
-  </packageSources>
-</configuration>
-```
-3. Add the `KamiYomu.CrawlerAgents.Core` package from the configured feed.
-4. Implement the agent
-- Create a class that implements the `ICrawlerAgent` interface from the `KamiYomu.CrawlerAgents.Core` namespace. This interface defines the lifecycle and behavior required by KamiYomu.
-5. Validate locally
-- Use the `KamiYomu.CrawlerAgents.Validator` repository to validate your implementation. Import it into your solution and run the validation tests to ensure compliance with KamiYomu standards:
+        dotnet add package KamiYomu.CrawlerAgents.Core
+
+4. Make your package discoverable by KamiYomu (add `PackageType` to your `.csproj`):
+
+    Add inside your `.csproj`:
+
+        <PropertyGroup>
+          <PackageType>Analyzer;KamiYomuCrawlerAgent</PackageType>
+        </PropertyGroup>
+
+5. Implement your agent
+    - Create a class that implements `ICrawlerAgent` from the `KamiYomu.CrawlerAgents.Core` namespace.
+    - Implement required lifecycle methods (crawl, extract metadata, etc.). The interface defines how KamiYomu will call your agent.
+
+Validate and test locally
+-------------------------
+- Use the validator repository to confirm your implementation meets KamiYomu requirements:
   - https://github.com/KamiYomu/KamiYomu.CrawlerAgents.Validator
-6.Package (optional)
--To create a distributable NuGet package, use `dotnet pack` orenable package generation on build in your `.csproj`.
-7. Publish (optional)
-- Publish your package to a feed accessible by KamiYomu.Web (GitHub Packages, a private feed,or a local folder).
-8. Register the feedin KamiYomu.Web
--In KamiYomu.Web: Agent Crawler → Install fromOther Sources → Setup Sources — add your feed URL so agents can be discovered and installed.
 
-Tip — local testing
---------------------
-- You do not need to publish to a public feed to test. Upload the generated `.nupkg` directly into KamiYomu.Web.
-- To produce a package automatically for Debug builds, add the following to your `.csproj`:
-```
-	<PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-	</PropertyGroup>
-```
-You can import this package directly into KamiYomu.Web for testing without publishing it to any feed, and also you can debug it if you import the `.pdb` file in the `/AppData/agents/{your.package}/lib/netstandard2.0/` folder.`
+- Local testing: you do not need to publish to a remote feed. You can build a `.nupkg` and upload it into KamiYomu.Web for testing.
 
-### Clone the Repository
+Packaging and publishing
+------------------------
+- Build a distributable package:
 
-```
-git clone https://github.com/KamiYomu/KamiYomu.CrawlerAgents.Core.git 
-cd KamiYomu.CrawlerAgents.Core
-```
+        dotnet pack -c Release
 
-### Build the Project
-```
-dotnet build -c Release
-```
+- To automatically generate a NuGet package for Debug builds, add to your `.csproj`:
 
+        <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+            <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+        </PropertyGroup>
 
-### Generate NuGet Package (Debug mode only)
-```
-dotnet build -c Debug
-```
+- Publish to a feed accessible by KamiYomu.Web (Nuget.org, GitHub Packages, Azure Artifacts, private feed, or local folder).
+- To test without a feed, upload the generated `.nupkg` directly into KamiYomu.Web.
 
+Debugging an installed agent
+----------------------------
+- Place the `.pdb` alongside the agent DLL inside the agent folder (e.g. `/AppData/agents/{your.package}/lib/net8.0/`) to enable source-level debugging when running inside KamiYomu.Web.
 
-> The package will be generated automatically in `bin/Debug` due to `GeneratePackageOnBuild=True`.
+Packaging notes
+---------------
+- Ensure your package includes necessary runtime assets and dependencies.
+- Keep the public API surface minimal and document required configuration and permissions.
+
+Commands summary
+----------------
+- Create project:
+    
+        dotnet new classlib -n MyKamiYomuAgent -f net8.0
+
+- Add package:
+
+        dotnet add package KamiYomu.CrawlerAgents.Core
+
+- Build Release package:
+
+        dotnet pack -c Release
+
+- Enable package on Debug build:
+
+        Add `<GeneratePackageOnBuild>True</GeneratePackageOnBuild>` under Debug condition in `.csproj`
 
 Dependencies
 ------------
-
 | Package         | Version |
 |-----------------|---------|
 | HtmlAgilityPack | 1.12.4  |
 | PuppeteerSharp  | 20.2.4  |
 
+Contributing
+------------
+- Follow repository coding conventions and include unit tests for new behavior.
+- Use the validator repo above to confirm compliance before publishing.
+- Open issues or pull requests against the core repository with clear descriptions and reproducible examples.
+
 License
 -------
+This project is licensed under the GNU General Public License v3.0 (GPL-3.0). See the `LICENSE` file for full terms.
 
-This project is licensed under the GNU General Public License v3.0 (GPL-3.0).
+Support / Contact
+-----------------
+- Repo: https://github.com/KamiYomu/KamiYomu.CrawlerAgents.Core
+- For integration or runtime questions, open an issue on the repository.
 
+Changelog
+---------
+- See repository Releases for version-specific notes.
+
+Copyright
+---------
 © KamiYomu. Licensed under GPL-3.0.

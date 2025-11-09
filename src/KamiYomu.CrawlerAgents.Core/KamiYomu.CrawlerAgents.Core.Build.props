@@ -3,6 +3,6 @@
 		<PackageType>Analyzer;KamiYomuCrawlerAgent</PackageType>
 	</PropertyGroup>
 	<PropertyGroup>
-		<PackageTags>crawler-agents;manga-download;mangadex</PackageTags>
+		<PackageTags>crawler-agents;manga-download</PackageTags>
 	</PropertyGroup>
 </Project>

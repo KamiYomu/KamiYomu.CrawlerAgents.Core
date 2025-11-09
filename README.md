@@ -39,7 +39,7 @@ Quick start
     Add inside your `.csproj`:
 
         <PropertyGroup>
-		    <PackageTags>crawler-agents;manga-download;mangadex</PackageTags>
+		    <PackageTags>crawler-agents;manga-download</PackageTags>
         </PropertyGroup>
 
 5. Implement your agent

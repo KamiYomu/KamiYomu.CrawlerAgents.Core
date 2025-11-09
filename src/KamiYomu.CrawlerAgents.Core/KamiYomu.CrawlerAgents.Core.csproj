@@ -32,4 +32,5 @@
 	  <None Update="Resources\logo.png" Pack="true" PackagePath="Resources/logo.png">
 	  </None>
 	</ItemGroup>
+	<Import Project="KamiYomu.CrawlerAgents.Core.props"/>
 </Project>

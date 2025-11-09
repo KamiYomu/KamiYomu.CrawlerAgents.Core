@@ -34,12 +34,12 @@ Quick start
 
         dotnet add package KamiYomu.CrawlerAgents.Core
 
-4. Make your package discoverable by KamiYomu (add `PackageType` to your `.csproj`):
+4. Make your package discoverable by KamiYomu (add `PackageTags` to your `.csproj`):
 
     Add inside your `.csproj`:
 
         <PropertyGroup>
-          <PackageType>Analyzer;KamiYomuCrawlerAgent</PackageType>
+		    <PackageTags>crawler-agents;manga-download</PackageTags>
         </PropertyGroup>
 
 5. Implement your agent

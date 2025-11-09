@@ -1,8 +1,8 @@
-﻿name: KamiYomu Crawler Agents Stable Release
+﻿name: KamiYomu Crawler Agents Pre-Release
 tag_name: ''
 target_commitish: main
 body: |
-  KamiYomu Crawler Agents Stable Release
+  KamiYomu Crawler Agents Pre-Release
 
   ## 🚀 Release
 
@@ -56,4 +56,4 @@ body: |
     <PackageReference Include="KamiYomu.CrawlerAgents.Core" Version="X.Y.Z" />
   ```
 draft: true
-prerelease: false
+prerelease: true

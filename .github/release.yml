@@ -1,0 +1,26 @@
+﻿name: Release Notes Template
+tag_name: ''
+target_commitish: main
+body: |
+  ## 🚀 What's New
+
+  - Feature 1: ...
+  - Feature 2: ...
+
+  ## 🐛 Bug Fixes
+
+  - Fixed issue with ...
+  - Resolved crash when ...
+
+  ## 🧰 Improvements
+
+  - Refactored ...
+  - Updated dependencies
+
+  ## 📦 Package Info
+
+  - Version: `vX.Y.Z`
+  - Commit: `{{ commit_sha }}`
+  - Date: `{{ date }}`
+draft: true
+prerelease: false

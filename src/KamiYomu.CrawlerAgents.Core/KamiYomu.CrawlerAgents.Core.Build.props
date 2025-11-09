@@ -2,4 +2,7 @@
 	<PropertyGroup>
 		<PackageType>Analyzer;KamiYomuCrawlerAgent</PackageType>
 	</PropertyGroup>
+	<PropertyGroup>
+		<PackageTags>crawler-agents;manga-download;mangadex</PackageTags>
+	</PropertyGroup>
 </Project>

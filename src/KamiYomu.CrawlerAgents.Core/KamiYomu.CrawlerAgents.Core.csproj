@@ -29,8 +29,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Update="Resources\logo.png" Pack="true" PackagePath="Resources/logo.png">
-	  </None>
+	  <None Include="KamiYomu.CrawlerAgents.Core.Build.props" Pack="true" PackagePath="build/" />
+	  <None Include="Resources\logo.png" Pack="true" PackagePath="Resources/" />
 	</ItemGroup>
-	<Import Project="KamiYomu.CrawlerAgents.Core.props"/>
+	<Import Project="KamiYomu.CrawlerAgents.Core.props" />
 </Project>

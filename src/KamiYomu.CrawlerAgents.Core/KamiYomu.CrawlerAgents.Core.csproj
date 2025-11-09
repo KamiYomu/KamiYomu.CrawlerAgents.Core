@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>netstandard2.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<LangVersion>13</LangVersion>
 		<Title>KamiYomu Crawler Agent Core</Title>
 		<Description>A foundational library for building, extending, and integrating custom crawler agents within the KamiYomu ecosystem. Provides essential abstractions, utilities, and lifecycle hooks to streamline agent development and ensure seamless interoperability across the platform.</Description>
@@ -9,6 +9,10 @@
 		<PackageProjectUrl>https://github.com/KamiYomu/KamiYomu.CrawlerAgents.Core</PackageProjectUrl>
 		<PackageIcon>Resources/logo.png</PackageIcon>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<Authors>KamiYomu</Authors>
+		<RepositoryUrl>https://github.com/KamiYomu/KamiYomu.CrawlerAgents.Core</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageTags>kamiyomu;crawler agents;manga download</PackageTags>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)' == 'Debug'">
@@ -20,12 +24,13 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="HtmlAgilityPack" Version="1.12.4"  />
-		<PackageReference Include="PuppeteerSharp" Version="20.2.4"  />
+		<PackageReference Include="HtmlAgilityPack" Version="1.12.4" />
+		<PackageReference Include="PuppeteerSharp" Version="20.2.4" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <None Update="Resources\logo.png" Pack="true" PackagePath="Resources/logo.png">
 	  </None>
 	</ItemGroup>
+	<Import Project="KamiYomu.CrawlerAgents.Core.props"/>
 </Project>

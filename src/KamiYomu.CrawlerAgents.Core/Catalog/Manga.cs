@@ -11,10 +11,19 @@ public class Manga
     
     [JsonInclude]
     public string Title { get; internal set; }
-    
+
+    [JsonInclude]
+    public Dictionary<string, string> AlternativeTitles { get; internal set; }
+
     [JsonInclude]
     public string Description { get; internal set; }
-    
+
+    [JsonInclude]
+    public Dictionary<string, string> AlternativeDescriptions { get; internal set; }
+
+    [JsonInclude]
+    public IEnumerable<string> Authors { get; internal set; }
+
     [JsonInclude]
     public IEnumerable<string> Tags { get; internal set; }
     
@@ -43,7 +52,7 @@ public class Manga
     public decimal LatestChapterAvailable { get; internal set; }
     
     [JsonInclude]
-    public string WebsiteUrl { get; internal set; }
+    public string WebSiteUrl { get; internal set; }
     
     [JsonInclude]
     public string ContentRating { get; internal set; }

@@ -30,9 +30,30 @@ namespace KamiYomu.CrawlerAgents.Core.Catalog.Builders
             return this;
         }
 
+        public MangaBuilder WithAlternativeTitles(Dictionary<string, string> alternativeTitles)
+        {
+            _manga.AlternativeTitles = alternativeTitles?.Select(p => new KeyValuePair<string, string>(p.Key, HttpUtility.HtmlDecode(p.Value)))
+                                                         .ToDictionary(p => p.Key, p => p.Value);
+
+            return this;
+        }
+
         public MangaBuilder WithDescription(string description)
         {
             _manga.Description = HttpUtility.HtmlDecode(description);
+            return this;
+        }
+        public MangaBuilder WithAlternativeDescriptions(Dictionary<string, string> alternativeTitles)
+        {
+            _manga.AlternativeDescriptions = alternativeTitles?.Select(p => new KeyValuePair<string, string>(p.Key, HttpUtility.HtmlDecode(p.Value)))
+                                                               .ToDictionary(p => p.Key, p => p.Value);
+
+            return this;
+        }
+
+        public MangaBuilder WithAuthors(params string[] authors)
+        {
+            _manga.Authors = authors.Select(HttpUtility.HtmlDecode);
             return this;
         }
 
@@ -108,7 +129,7 @@ namespace KamiYomu.CrawlerAgents.Core.Catalog.Builders
 
         public MangaBuilder WithWebsiteUrl(string url)
         {
-            _manga.WebsiteUrl = url;
+            _manga.WebSiteUrl = url;
             return this;
         }
 

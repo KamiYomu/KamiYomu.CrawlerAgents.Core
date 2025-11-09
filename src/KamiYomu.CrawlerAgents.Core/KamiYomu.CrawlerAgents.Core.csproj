@@ -17,10 +17,11 @@
 		<PackageType>Analyzer;KamiYomuCrawlerCoreAgent</PackageType>
 		<PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>
 		<Copyright>© KamiYomu. Licensed under GPL-3.0.</Copyright>
+		<PackageIconUrl>https://raw.githubusercontent.com/KamiYomu/KamiYomu.CrawlerAgents.Core/main/src/KamiYomu.CrawlerAgents.Core/Resources/logo.png</PackageIconUrl>
 		<PackageIcon>Resources/logo.png</PackageIcon>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 	</PropertyGroup>
-
+	
 	<PropertyGroup Condition="'$(Configuration)' == 'Debug'">
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<IncludeSymbols>True</IncludeSymbols>

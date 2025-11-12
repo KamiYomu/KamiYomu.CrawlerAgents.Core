@@ -8,19 +8,22 @@ public class Chapter
     public string Id { get; internal set; }
     
     [JsonInclude]
-    public int Volume { get; internal set; }
+    public decimal Volume { get; internal set; }
     
     [JsonInclude]
-    public int Number { get; internal set; }
+    public decimal Number { get; internal set; }
     
     [JsonInclude]
     public string Title { get; internal set; }
-    
+
+    [JsonInclude]
+    public string Description { get; internal set; }
+
     [JsonInclude]
     public string TranslatedLanguage { get; internal set; }
     
     [JsonInclude]
-    public int Pages { get; internal set; }
+    public decimal Pages { get; internal set; }
     
     [JsonInclude]
     public Uri Uri { get; internal set; }

@@ -19,6 +19,7 @@ jobs:
       DOTNET_VERSION: '8.0.x'
       SOLUTION_PATH: './src/KamiYomu.CrawlerAgents.Core.sln'
       PROJECT_PATH: './src/KamiYomu.CrawlerAgents.Core/KamiYomu.CrawlerAgents.Core.csproj'
+      TEST_PROJECT_PATH: './tests/KamiYomu.CrawlerAgents.Core.Tests/KamiYomu.CrawlerAgents.Core.Tests.csproj'
       NUGET_CONFIG_PATH: './src/NuGet.config'
 
     steps:
@@ -78,7 +79,7 @@ jobs:
               -p:Version="${{ env.VERSION }}"
 
       - name: Test
-        run: dotnet test ./tests/KamiYomu.CrawlerAgents.Core.Tests/KamiYomu.CrawlerAgents.Core.Tests.csproj --configuration Release --no-build
+        run: dotnet test ${{ env.TEST_PROJECT_PATH }} --configuration Release
 
       - name: Pack
         run: |

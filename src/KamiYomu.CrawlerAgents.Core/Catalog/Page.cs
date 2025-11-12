@@ -13,7 +13,7 @@ namespace KamiYomu.CrawlerAgents.Core.Catalog
         public string ChapterId { get; internal set; }
 
         [JsonInclude]
-        public int PageNumber { get; internal set; }
+        public decimal PageNumber { get; internal set; }
 
         [JsonInclude]
         public Uri ImageUrl { get; internal set; }

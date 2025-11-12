@@ -27,13 +27,13 @@ namespace KamiYomu.CrawlerAgents.Core.Catalog.Builders
             return this;
         }
 
-        public ChapterBuilder WithVolume(int volume)
+        public ChapterBuilder WithVolume(decimal volume)
         {
             _chapter.Volume = volume;
             return this;
         }
 
-        public ChapterBuilder WithNumber(int number)
+        public ChapterBuilder WithNumber(decimal number)
         {
             _chapter.Number = number;
             return this;
@@ -43,6 +43,12 @@ namespace KamiYomu.CrawlerAgents.Core.Catalog.Builders
         {
             _chapter.Title = WebUtility.HtmlDecode(title);
            
+            return this;
+        }
+
+        public ChapterBuilder WithDescription(string description)
+        {
+            _chapter.Description = WebUtility.HtmlDecode(description);
             return this;
         }
 

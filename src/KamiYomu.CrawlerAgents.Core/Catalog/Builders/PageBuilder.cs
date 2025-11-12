@@ -25,7 +25,7 @@
             return this;
         }
 
-        public PageBuilder WithPageNumber(int pageNumber)
+        public PageBuilder WithPageNumber(decimal pageNumber)
         {
             _page.PageNumber = pageNumber;
             return this;

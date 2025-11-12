@@ -78,7 +78,7 @@ jobs:
               -p:Version="${{ env.VERSION }}"
 
       - name: Test
-        run: dotnet test ${{ env.SOLUTION_PATH }} --configuration Release --no-build
+        run: dotnet test ./tests/KamiYomu.CrawlerAgents.Core.Tests/KamiYomu.CrawlerAgents.Core.Tests.csproj --configuration Release --no-build
 
       - name: Pack
         run: |

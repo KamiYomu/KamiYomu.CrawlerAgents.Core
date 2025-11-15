@@ -89,7 +89,7 @@ public class MangaBuilderTests
             .WithLastVolumeAvailable(5.5m)
             .WithLatestChapterAvailable(42.1m)
             .WithWebsiteUrl("https://manga.com")
-            .WithContentRating("PG-13")
+            .WithIsFamilySafe(false)
             .WithCoverFileName("cover.jpg")
             .Build();
 
@@ -111,7 +111,7 @@ public class MangaBuilderTests
         Assert.Equal(5.5m, manga.LastVolumeAvailable);
         Assert.Equal(42.1m, manga.LatestChapterAvailable);
         Assert.Equal("https://manga.com", manga.WebSiteUrl);
-        Assert.Equal("PG-13", manga.ContentRating);
+        Assert.False(manga.IsFamilySafe);
         Assert.Equal("cover.jpg", manga.CoverFileName);
     }
 }

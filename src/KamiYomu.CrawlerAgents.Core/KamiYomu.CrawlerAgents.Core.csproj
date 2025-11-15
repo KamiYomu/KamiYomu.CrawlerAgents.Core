@@ -14,8 +14,8 @@
 		<RepositoryUrl>https://github.com/KamiYomu/KamiYomu.CrawlerAgents.Core</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<PackageTags>kamiyomu;kamiyomu-crawler-core;manga-download</PackageTags>
-		<PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>
-		<Copyright>© KamiYomu. Licensed under GPL-3.0.</Copyright>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<Copyright>Copyright © KamiYomu. All rights reserved.</Copyright>
 		<PackageIconUrl>https://raw.githubusercontent.com/KamiYomu/KamiYomu.CrawlerAgents.Core/main/src/KamiYomu.CrawlerAgents.Core/Resources/logo.png</PackageIconUrl>
 		<PackageIcon>Resources/logo.png</PackageIcon>
 		<PackageReadmeFile>README.md</PackageReadmeFile>

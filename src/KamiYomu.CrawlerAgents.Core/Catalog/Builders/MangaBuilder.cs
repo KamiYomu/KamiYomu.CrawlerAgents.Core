@@ -133,9 +133,9 @@ namespace KamiYomu.CrawlerAgents.Core.Catalog.Builders
             return this;
         }
 
-        public MangaBuilder WithContentRating(string rating)
+        public MangaBuilder WithIsFamilySafe(bool isFamilySafe)
         {
-            _manga.ContentRating = rating;
+            _manga.IsFamilySafe = isFamilySafe;
             return this;
         }
 

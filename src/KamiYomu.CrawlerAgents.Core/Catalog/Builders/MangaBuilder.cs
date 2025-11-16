@@ -57,6 +57,12 @@ namespace KamiYomu.CrawlerAgents.Core.Catalog.Builders
             return this;
         }
 
+        public MangaBuilder WithArtists(params string[] artists)
+        {
+            _manga.Artists = artists.Select(HttpUtility.HtmlDecode);
+            return this;
+        }
+
         public MangaBuilder WithTags(params string[] tags)
         {
             _manga.Tags = tags.Select(HttpUtility.HtmlDecode);

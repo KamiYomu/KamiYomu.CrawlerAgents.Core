@@ -69,6 +69,7 @@ public class MangaBuilderTests
         var altTitles = new Dictionary<string, string> { { "en", "Title &amp; One" }, { "jp", "タイトル" } };
         var altDescriptions = new Dictionary<string, string> { { "en", "Desc &lt;b&gt;bold&lt;/b&gt;" } };
         var authors = new[] { "Author &amp; A", "Author B" };
+        var artists = new[] { "Artist &amp; A", "Artist B" };
         var tags = new[] { "Action", "Drama" };
         var links = new Dictionary<string, string> { { "site", "https://example.com" } };
         var coverUri = new Uri("https://example.com/cover.jpg");
@@ -80,6 +81,7 @@ public class MangaBuilderTests
             .WithDescription("A &lt;i&gt;great&lt;/i&gt; story")
             .WithAlternativeDescriptions(altDescriptions)
             .WithAuthors(authors)
+            .WithArtists(artists)
             .WithTags(tags)
             .WithCoverUrl(coverUri)
             .WithLinks(links)
@@ -102,6 +104,8 @@ public class MangaBuilderTests
         Assert.Equal("Desc <b>bold</b>", manga.AlternativeDescriptions["en"]);
         Assert.Contains("Author & A", manga.Authors);
         Assert.Contains("Author B", manga.Authors);
+        Assert.Contains("Artist & A", manga.Artists);
+        Assert.Contains("Artist B", manga.Artists);
         Assert.Contains("Action", manga.Tags);
         Assert.Equal(coverUri, manga.CoverUrl);
         Assert.Equal(links, manga.Links);

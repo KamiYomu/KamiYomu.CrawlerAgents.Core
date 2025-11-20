@@ -5,12 +5,11 @@ namespace KamiYomu.CrawlerAgents.Core;
 
 public abstract class AbstractCrawlerAgent
 {
-    protected readonly IDictionary<string, object> Options;
-    protected string HttpClientDefaultUserAgent { get; } = CrawlerAgentSettings.HttpUserAgent;
-    protected ILogger Logger { get; }
-    protected int TimeoutMilliseconds { get; } = CrawlerAgentSettings.TimeoutMilliseconds;
-
-    public AbstractCrawlerAgent(IDictionary<string, object> options)
+    protected readonly IDictionary<string, object> Options = new Dictionary<string, object>();
+    protected readonly string HttpClientDefaultUserAgent  = CrawlerAgentSettings.HttpUserAgent;
+    protected readonly int TimeoutMilliseconds  = CrawlerAgentSettings.TimeoutMilliseconds;
+    protected readonly ILogger Logger;
+    protected AbstractCrawlerAgent(IDictionary<string, object> options)
     {
         Options = options ?? new Dictionary<string, object>();
 

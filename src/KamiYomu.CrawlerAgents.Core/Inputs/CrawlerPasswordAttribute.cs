@@ -1,69 +1,24 @@
-﻿using Microsoft.Extensions.Options;
+﻿namespace KamiYomu.CrawlerAgents.Core.Inputs;
 
-namespace KamiYomu.CrawlerAgents.Core.Inputs
+/// <summary>
+/// Represents a configurable capability or toggleable option exposed by an agent class.
+/// Each <see cref="CrawlerPasswordAttribute"/> defines a input-password type
+/// that can influence the crawler's behavior, execution mode, or diagnostic output.
+/// Multiple instances of this attribute may be applied to a single agent to describe its complete set of supported features.
+/// </summary>
+[AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = true)]
+public class CrawlerPasswordAttribute : AbstractInputAttribute
 {
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
-    public class CrawlerPasswordAttribute : AbstractInputAttribute
+    /// <inheritdoc/>
+    public CrawlerPasswordAttribute(string name, string legend) : base(name, legend)
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CrawlerPasswordAttribute"/> class.
-        /// </summary>
-        /// <param name="name">An identifier of the option (e.g., "Password").</param>
-        /// <param name="legend">A descriptive label or explanation for the option.</param>
-        public CrawlerPasswordAttribute(string name, string legend)
-        {
-            Name = name ?? throw new ArgumentNullException(nameof(name));
-            Legend = legend;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CrawlerPasswordAttribute"/> class.
-        /// </summary>
-        /// <param name="name">An identifier of the option (e.g., "Password").</param>
-        /// <param name="legend">A descriptive label or explanation for the option.</param>
-        /// <param name="required">Whether this option is required for processing or validation.</param>
-        public CrawlerPasswordAttribute(string name, string legend, bool required)
-            : this(name, legend)
-        {
-            Required = required;
-            Order = 0;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CrawlerPasswordAttribute"/> class.
-        /// </summary>
-        /// <param name="name">An identifier of the option (e.g., "Password").</param>
-        /// <param name="legend">A descriptive label or explanation for the option.</param>
-        /// <param name="required">Whether this option is required for processing or validation.</param>
-        /// <param name="order">Specifies the display order of this field relative to other fields.</param>
-        public CrawlerPasswordAttribute(string name, string legend, bool required, short order)
-            : this(name, legend)
-        {
-            Required = required;
-            Order = order;
-        }
-
-        /// <summary>
-        /// Gets the key for this option, used as internal identifier.
-        /// </summary>
-        public string Name { get; }
-
-        /// <summary>
-        /// Gets the descriptive label or explanation for this option.
-        /// </summary>
-        public string Legend { get; }
-
-        /// <summary>
-        /// Indicates whether this option is required for processing or validation.
-        /// </summary>
-        public bool Required { get; } = false;
-
-        /// <summary>
-        /// Specifies the display order of this field relative to other options.
-        /// </summary>
-        public short Order { get; } = 0;
-
-        /// <inheritdoc/>
-        public override string ToString() => $"Order={Order} | Name=\"{Name}\" | Legend=\"{Legend}\" | Required={Required} | Type=\"{nameof(CrawlerPasswordAttribute)}\"";
+    }
+    /// <inheritdoc/>
+    public CrawlerPasswordAttribute(string name, string legend, bool required, string defaultValue) : base(name, legend, required, defaultValue)
+    {
+    }
+    /// <inheritdoc/>
+    public CrawlerPasswordAttribute(string name, string legend, bool required, string defaultValue, short order) : base(name, legend, required, defaultValue, order)
+    {
     }
 }

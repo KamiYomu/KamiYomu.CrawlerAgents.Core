@@ -9,7 +9,7 @@ namespace KamiYomu.CrawlerAgents.Core.Inputs
     /// that can influence the crawler's behavior, execution mode, or diagnostic output.
     /// Multiple instances of this attribute may be applied to a single agent to describe its complete set of supported features.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = true)]
     public class CrawlerCheckBoxAttribute : AbstractInputAttribute
     {
         /// <summary>
@@ -22,16 +22,12 @@ namespace KamiYomu.CrawlerAgents.Core.Inputs
         /// A set of selectable values or flags associated with this option (e.g., "general", "safe", "14").
         /// The final value will be formatted as list of <c>Name.OptionSelected</c> to support structured identification.
         /// </param>
-        public CrawlerCheckBoxAttribute(string name, string legend, string[] options)
+        public CrawlerCheckBoxAttribute(string name, string legend, string[] options) : base(name, legend)
         {
-            Name = name ?? throw new ArgumentNullException(nameof(name));
-            Legend = legend;
             Options = options?.Length > 0 ? options : throw new ArgumentException("Must contains items", nameof(options));
-            Order = 0;
-            Required = false;
         }
 
-
+        /// <inheritdoc/>
         /// <summary>
         /// Initializes a new instance of the <see cref="CrawlerCheckBoxAttribute"/> class.
         /// </summary>
@@ -39,11 +35,13 @@ namespace KamiYomu.CrawlerAgents.Core.Inputs
         /// <param name="legend">A descriptive label or explanation for the option.</param>
         /// <param name="required">Whether this option is required for processing or validation.</param>
         /// <param name="options">One or more  flags or identifiers associated with this option (e.g.,  "en", "pt" "fr").</param>
-        public CrawlerCheckBoxAttribute(string name, string legend, bool required, string[] options)
+        /// <param name="defaultValue">Set the default value for this option</param>
+        public CrawlerCheckBoxAttribute(string name, string legend, bool required, string defaultValue, string[] options)
             : this(name, legend, options)
         {
             Required = required;
             Order = 0;
+            DefaultValue = defaultValue;
         }
 
         /// <summary>
@@ -54,37 +52,19 @@ namespace KamiYomu.CrawlerAgents.Core.Inputs
         /// <param name="required">Whether this option is required for processing or validation.</param>
         /// <param name="order">Specifies the display order of this field relative to other fields.</param>
         /// <param name="options">One or more  flags or identifiers associated with this option (e.g.,  "en", "pt" "fr").</param>
-        public CrawlerCheckBoxAttribute(string name, string legend, bool required, short order, string[] options)
-            : this(name, legend, options)
+        /// <param name="defaultValue">Set the default value for this option</param>
+        public CrawlerCheckBoxAttribute(string name, string legend, bool required, string defaultValue, short order, string[] options)
+            : this(name, legend, required, defaultValue, options)
         {
             Required = required;
             Order = order;
         }
 
         /// <summary>
-        /// Gets the internal identifier for this option.
-        /// </summary>
-        public string Name { get; }
-
-        /// <summary>
-        /// Gets the descriptive label or explanation for this option.
-        /// </summary>
-        public string Legend { get; }
-
-        /// <summary>
         /// Gets the options or identifiers that activate this option in the agent's runtime.
         /// </summary>
         public string[] Options { get; }
 
-        /// <summary>
-        /// Indicates whether this option is required for processing or validation.
-        /// </summary>
-        public bool Required { get; } = false;
-
-        /// <summary>
-        /// Specifies the display order of this field relative to other options.
-        /// </summary>
-        public short Order { get; } = 0;
 
         /// <inheritdoc/>
         public override string ToString() => $"Order={Order} | Name=\"{Name}\" | Legend=\"{Legend}\" | Options=[{string.Join(", ", Options)}] | Required={Required} | Type=\"{nameof(CrawlerCheckBoxAttribute)}\"";

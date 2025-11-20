@@ -18,11 +18,11 @@ public static class CrawlerAgentSettings
     /// </summary>
     public static readonly int TimeoutMilliseconds = 60000;
 
-    internal static readonly Regex uaRegex = new Regex(@"^[ -~]{1,512}$", RegexOptions.Compiled);
+    internal static readonly Regex UserAgentRegex = new Regex(@"^[ -~]{1,512}$", RegexOptions.Compiled);
 
-    public static bool IsLikelyUserAgent(string? userAgent)
+    public static bool IsLikelyUserAgent(string userAgent)
     {
-        return !string.IsNullOrWhiteSpace(userAgent) && uaRegex.IsMatch(userAgent);
+        return !string.IsNullOrWhiteSpace(userAgent) && UserAgentRegex.IsMatch(userAgent);
     }
 
     public static class DefaultInputs
@@ -37,10 +37,5 @@ public static class CrawlerAgentSettings
             HttpClientTimeout,
             KamiYomuILogger
         ];
-
-        public static bool IsDefaultInput(string inputName)
-        {
-            return Array.Exists(ExistingInputs, name => name.Equals(inputName, StringComparison.OrdinalIgnoreCase));
-        }
     }
 }

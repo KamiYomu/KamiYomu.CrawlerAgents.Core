@@ -67,11 +67,10 @@ namespace KamiYomu.CrawlerAgents.Core.Tests.Inputs
         }
 
         public static IEnumerable<object[]> InvalidOptionsData =>
-            new List<object[]>
-            {
+            [
                 new object[] { null },
                 new object[] { Array.Empty<string>() }
-            };
+            ];
 
         [Fact]
         public void ToString_ReturnsExpectedFormat()

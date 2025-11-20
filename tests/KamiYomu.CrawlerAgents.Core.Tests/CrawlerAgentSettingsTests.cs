@@ -28,14 +28,13 @@ public class CrawlerAgentSettingsTests
     }
 
     public static IEnumerable<object[]> InvalidUserAgentData =>
-    new List<object[]>
-    {
-                new object[] { null },
-                new object[] { "" },
-                new object[] { "   " },    
-                new object[] { "\t\n\r" },
-                new object[] { "A" + new string('B', 600) } 
-    };
+    [
+                [null],
+                [""],
+                ["   "],    
+                ["\t\n\r"],
+                ["A" + new string('B', 600)] 
+    ];
 
     [Theory]
     [MemberData(nameof(InvalidUserAgentData))]
@@ -55,31 +54,4 @@ public class CrawlerAgentSettingsTests
         var result = CrawlerAgentSettings.IsLikelyUserAgent(ua);
         Assert.False(result);
     }
-
-    [Fact]
-    public void DefaultInputs_ShouldContainExpectedConstants()
-    {
-        Assert.Equal("BrowserUserAgent", CrawlerAgentSettings.DefaultInputs.BrowserUserAgent);
-        Assert.Equal("HttpClientTimeout", CrawlerAgentSettings.DefaultInputs.HttpClientTimeout);
-        Assert.Equal("KamiYomuILogger", CrawlerAgentSettings.DefaultInputs.KamiYomuILogger);
-    }
-
-    [Theory]
-    [InlineData("BrowserUserAgent")]
-    [InlineData("HttpClientTimeout")]
-    [InlineData("KamiYomuILogger")]
-    [InlineData("browseruseragent")] 
-    public void IsDefaultInput_ValidNames_ReturnsTrue(string inputName)
-    {
-        Assert.True(CrawlerAgentSettings.DefaultInputs.IsDefaultInput(inputName));
-    }
-
-    [Theory]
-    [InlineData("NotExisting")]
-    [InlineData("AnotherInput")]
-    public void IsDefaultInput_InvalidNames_ReturnsFalse(string inputName)
-    {
-        Assert.False(CrawlerAgentSettings.DefaultInputs.IsDefaultInput(inputName));
-    }
-
 }

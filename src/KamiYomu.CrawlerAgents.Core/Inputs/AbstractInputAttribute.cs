@@ -12,7 +12,7 @@ public abstract class AbstractInputAttribute : Attribute
     /// Initializes a new instance of the <see cref="CrawlerTextAttribute"/> class.
     /// </summary>
     /// <param name="name">An identifier of the input.text field (e.g., "Username").</param>
-    public AbstractInputAttribute(string name, string legend)
+    protected AbstractInputAttribute(string name, string legend)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(name, nameof(name));
         Name = name;
@@ -29,7 +29,7 @@ public abstract class AbstractInputAttribute : Attribute
     /// <param name="legend">A descriptive label or explanation for the option.</param>
     /// <param name="required">Whether this option is required for processing or validation.</param>
     /// <param name="defaultValue">Set the default value for this option</param>
-    public AbstractInputAttribute(string name, string legend, bool required, string defaultValue)
+    protected AbstractInputAttribute(string name, string legend, bool required, string defaultValue)
         : this(name, legend)
     {
         Required = required;
@@ -44,7 +44,7 @@ public abstract class AbstractInputAttribute : Attribute
     /// <param name="legend">A descriptive label or explanation for the option.</param>
     /// <param name="required">Whether this option is required for processing or validation.</param>
     /// <param name="order">Specifies the display order of this field relative to other fields.</param>
-    public AbstractInputAttribute(string name, string legend, bool required, string defaultValue, short order)
+    protected AbstractInputAttribute(string name, string legend, bool required, string defaultValue, short order)
         : this(name, legend, required, defaultValue)
     {
         Order = order;

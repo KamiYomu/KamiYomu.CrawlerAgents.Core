@@ -1,4 +1,6 @@
-﻿namespace KamiYomu.CrawlerAgents.Core.Catalog.Builders
+﻿using PuppeteerSharp;
+
+namespace KamiYomu.CrawlerAgents.Core.Catalog.Builders
 {
     /// <summary>
     /// Provides a fluent builder for constructing <see cref="PagedResultBuilder{T}"/>. This class simplifies <see cref="PagedResult{T}"/> creation
@@ -6,7 +8,7 @@
     /// </summary>
     public class PagedResultBuilder<T> where T : class
     {
-        private readonly PagedResult<T> _result = new();
+        private PagedResult<T> _result = new();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PagedResultBuilder{T}"/> class.
@@ -16,10 +18,16 @@
         /// <summary>
         /// Creates a new <see cref="PagedResultBuilder{T}"/> instance.
         /// </summary>
+        /// <param name="pagedResult">An optional existing <see cref="PagedResult{T}"/> to initialize the builder with.</param>
         /// <returns>A new builder for constructing a <see cref="PagedResult{T}"/>.</returns>
-        public static PagedResultBuilder<T> Create()
+        public static PagedResultBuilder<T> Create(PagedResult<T> pagedResult = null)
         {
-            return new PagedResultBuilder<T>();
+            var builder = new PagedResultBuilder<T>();
+            if (pagedResult != null)
+            {
+                builder._result = pagedResult;
+            }
+            return builder;
         }
 
         /// <summary>

@@ -6,6 +6,7 @@
         Completed = 1,
         OnHiatus = 2,
         Cancelled = 3,
-        Unreleased = 4
+        Unreleased = 4,
+        Unknown = 5
     }
 }

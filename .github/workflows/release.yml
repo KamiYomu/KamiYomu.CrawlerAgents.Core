@@ -133,7 +133,6 @@ jobs:
             --skip-duplicate
             
       - name: Push package to NuGet.org
-        if: ${{ env.IS_PRERELEASE == 'false' }}
         run: |
           dotnet nuget push "./nugetPackage/**/*.nupkg" \
             --api-key "${{ secrets.GH_KAMIYOMU_NUGETORG_PACKAGE_PUBLISHER }}" \

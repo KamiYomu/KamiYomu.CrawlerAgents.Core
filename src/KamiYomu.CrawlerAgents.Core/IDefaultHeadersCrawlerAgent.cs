@@ -9,7 +9,7 @@ namespace KamiYomu.CrawlerAgents.Core;
 /// Download headers interface for crawler agents, 
 /// providing a mechanism to retrieve default HTTP headers used in requests to the target site.
 /// </summary>
-public interface IDownloadHeaders
+public interface IDefaultHeadersCrawlerAgent
 {
     /// <summary>
     /// Retrieves the default HTTP headers used by the crawler agent in its requests to the target site.

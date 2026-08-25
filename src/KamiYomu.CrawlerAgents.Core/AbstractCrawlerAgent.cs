@@ -248,8 +248,7 @@ public abstract partial class AbstractCrawlerAgent : IDisposable
     /// This method is called by the public Dispose method and can be overridden in derived classes to release both managed and unmanaged resources.
     /// The disposing parameter indicates whether the method is being called from the Dispose method (true) or from a finalizer (false).
     /// </summary>
-    /// <param name="disposing"></param>
-    protected virtual void Dispose(bool disposing)
+    /// <param name="disposing">True when called from <see cref="Dispose()"/>; false when called from a finalizer.</param>
     {
         if (_disposed)
             return;

@@ -1,12 +1,11 @@
-﻿namespace KamiYomu.CrawlerAgents.Core.Catalog.Definitions
+﻿namespace KamiYomu.CrawlerAgents.Core.Catalog.Definitions;
+
+public enum ReleaseStatus
 {
-    public enum ReleaseStatus
-    {
-        Continuing = 0,
-        Completed = 1,
-        OnHiatus = 2,
-        Cancelled = 3,
-        Unreleased = 4,
-        Unknown = 5
-    }
+    Continuing = 0,
+    Completed = 1,
+    OnHiatus = 2,
+    Cancelled = 3,
+    Unreleased = 4,
+    Unknown = 5
 }

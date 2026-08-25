@@ -37,7 +37,7 @@ jobs:
           path: '**/test-results.trx'
 
       - name: Check code formatting
-        run: dotnet format --verify-no-changes --verbosity diagnostic
+        run: dotnet format --workspace ./src/KamiYomu.CrawlerAgents.Core.sln --verify-no-changes --verbosity diagnostic
 
       - name: Check for security vulnerabilities
-        run: dotnet list package --vulnerable
+        run: dotnet list ./src/KamiYomu.CrawlerAgents.Core.sln package --vulnerable

@@ -249,6 +249,7 @@ public abstract partial class AbstractCrawlerAgent : IDisposable
     /// The disposing parameter indicates whether the method is being called from the Dispose method (true) or from a finalizer (false).
     /// </summary>
     /// <param name="disposing">True when called from <see cref="Dispose()"/>; false when called from a finalizer.</param>
+    protected virtual void Dispose(bool disposing)
     {
         if (_disposed)
             return;

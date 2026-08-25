@@ -134,6 +134,11 @@ public abstract partial class AbstractCrawlerAgent : IDisposable
             Logger = loggerObj as ILogger;
         }
 
+        if (string.IsNullOrWhiteSpace(HttpClientDefaultUserAgent))
+        {
+            HttpClientDefaultUserAgent = GetKamiYomuUserAgent();
+        }
+
         DefaultFlareSolverrHttpHandler = ResolveHandler(options, FlareSolverrHttpHandler);
         DefaultChromiumHttpHandler = ResolveHandler(options, ChromiumHttpHandler);
         DefaultHttpClientHandler = ResolveFallbackHandler(
@@ -142,11 +147,6 @@ public abstract partial class AbstractCrawlerAgent : IDisposable
             FlareSolverrHttpHandler,
             ChromiumHttpHandler
         );
-
-        if (string.IsNullOrWhiteSpace(HttpClientDefaultUserAgent))
-        {
-            HttpClientDefaultUserAgent = GetKamiYomuUserAgent();
-        }
     }
 
     /// <summary>
@@ -156,10 +156,10 @@ public abstract partial class AbstractCrawlerAgent : IDisposable
     /// <param name="key">The key used to look up the HTTP client handler in the options dictionary.</param>
     /// <returns>The resolved HTTP client handler.</returns>
     private static HttpClientHandler ResolveHandler(
-    IDictionary<string, object?> options,
+    IDictionary<string, object> options,
     string key)
     {
-        return options.TryGetValue(key, out var value) &&
+        return options.TryGetValue(key, out object value) &&
                value is HttpClientHandler handler
             ? handler
             : new HttpClientHandler();
@@ -173,12 +173,12 @@ public abstract partial class AbstractCrawlerAgent : IDisposable
     /// <param name="keys">The keys used to look up the HTTP client handler in the options dictionary.</param>
     /// <returns>The resolved HTTP client handler.</returns>
     private static HttpClientHandler ResolveFallbackHandler(
-    IDictionary<string, object?> options,
+    IDictionary<string, object> options,
     params string[] keys)
     {
         foreach (string key in keys)
         {
-            if (options.TryGetValue(key, out var value) &&
+            if (options.TryGetValue(key, out object value) &&
                 value is HttpClientHandler handler)
             {
                 return handler;

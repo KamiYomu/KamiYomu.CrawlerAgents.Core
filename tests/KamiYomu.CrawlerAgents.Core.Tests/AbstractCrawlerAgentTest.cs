@@ -30,7 +30,7 @@ public class TestCrawlerAgent : AbstractCrawlerAgent
 public class AbstractCrawlerAgentTest
 {
     [Fact]
-    public void Constructor_WithNullOptions_ShouldInitializeEmptyDictionary()
+    public void Constructor_WithEmptyOptions_ShouldInitializeEmptyDictionary()
     {
         // Arrange & Act
         var agent = new TestCrawlerAgent(new Dictionary<string, object>());

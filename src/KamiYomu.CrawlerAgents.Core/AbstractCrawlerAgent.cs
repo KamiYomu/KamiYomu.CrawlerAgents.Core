@@ -20,6 +20,7 @@ namespace KamiYomu.CrawlerAgents.Core;
 /// </remarks>
 public abstract partial class AbstractCrawlerAgent : IDisposable
 {
+    private bool _disposed = false;
     /// <summary>
     /// Browser user agent string to be used for HTTP requests. 
     /// This constant is used as a key in the options dictionary to specify a custom user agent for the crawler.
@@ -114,7 +115,8 @@ public abstract partial class AbstractCrawlerAgent : IDisposable
     /// <param name="options">A dictionary of options to configure the crawler agent.</param>
     protected AbstractCrawlerAgent(IDictionary<string, object> options)
     {
-        Options = options ?? new Dictionary<string, object>();
+        options ??= new Dictionary<string, object>();
+        Options = options;
 
         if (Options.TryGetValue(BrowserUserAgent, out var userAgentObj))
         {
@@ -237,6 +239,27 @@ public abstract partial class AbstractCrawlerAgent : IDisposable
     /// <inheritdoc/>
     public void Dispose()
     {
-        DefaultHttpClientHandler.Dispose();
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
+    }
+
+    /// <summary>
+    /// Disposes of the resources used by the crawler agent. 
+    /// This method is called by the public Dispose method and can be overridden in derived classes to release both managed and unmanaged resources.
+    /// The disposing parameter indicates whether the method is being called from the Dispose method (true) or from a finalizer (false).
+    /// </summary>
+    /// <param name="disposing"></param>
+    protected virtual void Dispose(bool disposing)
+    {
+        if (_disposed)
+            return;
+
+        if (disposing)
+        {
+            DefaultHttpClientHandler?.Dispose();
+            DefaultFlareSolverrHttpHandler?.Dispose();
+            DefaultChromiumHttpHandler?.Dispose();
+        }
+        _disposed = true;
     }
 }

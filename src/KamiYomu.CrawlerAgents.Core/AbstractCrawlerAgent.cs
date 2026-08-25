@@ -24,37 +24,37 @@ public abstract partial class AbstractCrawlerAgent : IDisposable
     /// Browser user agent string to be used for HTTP requests. 
     /// This constant is used as a key in the options dictionary to specify a custom user agent for the crawler.
     /// </summary>
-    protected const string BrowserUserAgent = nameof(BrowserUserAgent);
+    private const string BrowserUserAgent = nameof(BrowserUserAgent);
     /// <summary>
     /// HTTP client timeout key in milliseconds. 
     /// This constant is used as a key in the options dictionary to specify a custom timeout for the HTTP client.
     /// </summary>
-    protected const string HttpClientTimeout = nameof(HttpClientTimeout);
+    private const string HttpClientTimeout = nameof(HttpClientTimeout);
     /// <summary>
     /// Logger instance for the crawler.
     /// This constant is used as a key in the options dictionary to specify a custom logger for the crawler.
     /// </summary>
-    protected const string KamiYomuILogger = nameof(KamiYomuILogger);
+    private const string KamiYomuILogger = nameof(KamiYomuILogger);
     /// <summary>
     /// FlareSolverr URL for the crawler.
     /// This constant is used as a key in the options dictionary to specify a custom FlareSolverr URL for the crawler.
     /// </summary>
-    protected const string FlareSolverrUrl = nameof(FlareSolverrUrl);
+    private const string FlareSolverrUrl = nameof(FlareSolverrUrl);
     /// <summary>
     /// FlareSolverr HTTP handler for the crawler.
     /// This constant is used as a key in the options dictionary to specify a custom FlareSolverr HTTP handler for the crawler.
     /// </summary>
-    protected const string FlareSolverrHttpHandler = nameof(FlareSolverrHttpHandler);
+    private const string FlareSolverrHttpHandler = nameof(FlareSolverrHttpHandler);
     /// <summary>
     /// Chromium HTTP handler for the crawler.
     /// This constant is used as a key in the options dictionary to specify a custom Chromium HTTP handler for the crawler.
     /// </summary>
-    protected const string ChromiumHttpHandler = nameof(ChromiumHttpHandler);
+    private const string ChromiumHttpHandler = nameof(ChromiumHttpHandler);
     /// <summary>
     /// Smart crawler HTTP handler for the crawler.
     /// This constant is used as a key in the options dictionary to specify a custom smart crawler HTTP handler for the crawler.
     /// </summary>
-    protected const string SmartCrawlerHttpHandler = nameof(SmartCrawlerHttpHandler);
+    private const string SmartCrawlerHttpHandler = nameof(SmartCrawlerHttpHandler);
     /// <summary>
     /// The HTTP client timeout value, in milliseconds.
     /// Used in the options dictionary to define a custom timeout for the HTTP client.
@@ -97,6 +97,18 @@ public abstract partial class AbstractCrawlerAgent : IDisposable
     /// </summary>
     protected readonly HttpClientHandler DefaultHttpClientHandler;
     /// <summary>
+    /// Default FlareSolverr HTTP client handler used for making HTTP requests.
+    /// This handler can be customized via the options dictionary using the <see cref="FlareSolverrHttpHandler"/> key,
+    /// otherwise a new instance of <see cref="HttpClientHandler"/> is created.
+    /// </summary>
+    protected readonly HttpClientHandler DefaultFlareSolverrHttpHandler;
+    /// <summary>
+    /// Default Chromium HTTP client handler used for making HTTP requests.
+    /// This handler can be customized via the options dictionary using the <see cref="ChromiumHttpHandler"/> key,
+    /// otherwise a new instance of <see cref="HttpClientHandler"/> is created.
+    /// </summary>
+    protected readonly HttpClientHandler DefaultChromiumHttpHandler;
+    /// <summary>
     /// Initializes a new instance of the <see cref="AbstractCrawlerAgent"/> class with the specified options.
     /// </summary>
     /// <param name="options">A dictionary of options to configure the crawler agent.</param>
@@ -122,22 +134,62 @@ public abstract partial class AbstractCrawlerAgent : IDisposable
             Logger = loggerObj as ILogger;
         }
 
-        DefaultHttpClientHandler = Options.TryGetValue(SmartCrawlerHttpHandler, out object smartCrawler)
-                && smartCrawler is HttpClientHandler h1
-                ? h1
-                : Options.TryGetValue(FlareSolverrHttpHandler, out object flareSolverr)
-                && flareSolverr is HttpClientHandler h2
-                ? h2
-                : Options.TryGetValue(ChromiumHttpHandler, out object chromium)
-                && chromium is HttpClientHandler h3
-                ? h3
-                : new HttpClientHandler();
+        DefaultFlareSolverrHttpHandler = ResolveHandler(options, FlareSolverrHttpHandler);
+        DefaultChromiumHttpHandler = ResolveHandler(options, ChromiumHttpHandler);
+        DefaultHttpClientHandler = ResolveFallbackHandler(
+            options,
+            SmartCrawlerHttpHandler,
+            FlareSolverrHttpHandler,
+            ChromiumHttpHandler
+        );
 
         if (string.IsNullOrWhiteSpace(HttpClientDefaultUserAgent))
         {
             HttpClientDefaultUserAgent = GetKamiYomuUserAgent();
         }
     }
+
+    /// <summary>
+    /// Resolves the HTTP client handler from the provided options dictionary using the specified key.
+    /// </summary>
+    /// <param name="options">The dictionary of options to configure the HTTP client handler.</param>
+    /// <param name="key">The key used to look up the HTTP client handler in the options dictionary.</param>
+    /// <returns>The resolved HTTP client handler.</returns>
+    private static HttpClientHandler ResolveHandler(
+    IDictionary<string, object?> options,
+    string key)
+    {
+        return options.TryGetValue(key, out var value) &&
+               value is HttpClientHandler handler
+            ? handler
+            : new HttpClientHandler();
+    }
+
+    /// <summary>
+    /// Resolves the HTTP client handler from the provided options dictionary using a list of keys, returning the first valid handler found. 
+    /// If none are found, a new instance of <see cref="HttpClientHandler"/> is returned.
+    /// </summary>
+    /// <param name="options">The dictionary of options to configure the HTTP client handler.</param>
+    /// <param name="keys">The keys used to look up the HTTP client handler in the options dictionary.</param>
+    /// <returns>The resolved HTTP client handler.</returns>
+    private static HttpClientHandler ResolveFallbackHandler(
+    IDictionary<string, object?> options,
+    params string[] keys)
+    {
+        foreach (string key in keys)
+        {
+            if (options.TryGetValue(key, out var value) &&
+                value is HttpClientHandler handler)
+            {
+                return handler;
+            }
+        }
+
+        return new HttpClientHandler();
+    }
+
+
+
     /// <summary>
     /// Gets the version of the assembly that contains the crawler core. This can be useful for logging, diagnostics, or ensuring compatibility with other components.
     /// </summary>

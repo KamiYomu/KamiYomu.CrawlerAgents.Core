@@ -118,7 +118,13 @@ public abstract partial class AbstractCrawlerAgent : IDisposable
     /// This client can be customized via the options dictionary using the <see cref="ApplicationHttpClient"/> key,
     /// otherwise a new instance of <see cref="HttpClient"/> is created with the default HTTP client handler.
     /// </summary>
-    protected readonly HttpClient DefaultHttpClient;
+    protected HttpClient DefaultHttpClient => _httpClientLazy.Value;
+    /// <summary>
+    /// Http client lazy initialization. 
+    /// This field is used to lazily initialize the default HTTP client when it is first accessed, 
+    /// ensuring that the client is only created when needed.
+    /// </summary>
+    private Lazy<HttpClient> _httpClientLazy;
     /// <summary>
     /// Initializes a new instance of the <see cref="AbstractCrawlerAgent"/> class with the specified options.
     /// </summary>
@@ -159,14 +165,19 @@ public abstract partial class AbstractCrawlerAgent : IDisposable
             ChromiumHttpHandler
         );
 
+        _httpClientLazy = new Lazy<HttpClient>(GetDefaultHttpClient);
 
+    }
+
+    protected virtual HttpClient GetDefaultHttpClient()
+    {
         if (Options.TryGetValue(ApplicationHttpClient, out var httpClientObj) && httpClientObj is HttpClient client)
         {
-            DefaultHttpClient = client;
+            return client;
         }
         else
         {
-            DefaultHttpClient = new HttpClient(DefaultHttpClientHandler)
+            return new HttpClient(DefaultHttpClientHandler)
             {
                 Timeout = TimeSpan.FromMilliseconds(TimeoutMilliseconds)
             };
@@ -277,6 +288,11 @@ public abstract partial class AbstractCrawlerAgent : IDisposable
             DefaultHttpClientHandler?.Dispose();
             DefaultFlareSolverrHttpHandler?.Dispose();
             DefaultChromiumHttpHandler?.Dispose();
+
+            if (_httpClientLazy.IsValueCreated)
+            {
+                DefaultHttpClient?.Dispose();
+            }
         }
         _disposed = true;
     }

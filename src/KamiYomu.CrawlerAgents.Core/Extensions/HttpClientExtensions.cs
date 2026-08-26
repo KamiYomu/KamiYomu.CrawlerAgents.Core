@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using PuppeteerSharp;
+using System.Net.Http;
 using System.Net.Http.Headers;
 
 namespace KamiYomu.CrawlerAgents.Core.Extensions;
@@ -62,10 +63,7 @@ public static class HttpClientExtensions
     /// </remarks>
     public static void AddRangeHeaders(this HttpClient httpClient, IEnumerable<KeyValuePair<string, string>> headers)
     {
-        foreach (KeyValuePair<string, string> header in headers)
-        {
-            _ = httpClient.DefaultRequestHeaders.TryAddWithoutValidation(header.Key, header.Value);
-        }
+        httpClient.AddRangeHeaders([.. headers]);
     }
     /// <summary>
     /// Adds multiple HTTP headers to an <see cref="HttpRequestMessage"/> without validation.
@@ -79,9 +77,6 @@ public static class HttpClientExtensions
     /// </remarks>
     public static void AddRangeHeaders(this HttpRequestMessage request, IEnumerable<KeyValuePair<string, string>> headers)
     {
-        foreach (KeyValuePair<string, string> header in headers)
-        {
-            _ = request.Headers.TryAddWithoutValidation(header.Key, header.Value);
-        }
+        request.AddRangeHeaders([.. headers]);
     }
 }

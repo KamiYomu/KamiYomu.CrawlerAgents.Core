@@ -22,6 +22,10 @@ public abstract partial class AbstractCrawlerAgent : IDisposable
 {
     private bool _disposed = false;
     /// <summary>
+    /// Application HTTP client key in the options dictionary.
+    /// </summary>
+    private const string ApplicationHttpClient = nameof(ApplicationHttpClient);
+    /// <summary>
     /// Browser user agent string to be used for HTTP requests. 
     /// This constant is used as a key in the options dictionary to specify a custom user agent for the crawler.
     /// </summary>
@@ -110,6 +114,18 @@ public abstract partial class AbstractCrawlerAgent : IDisposable
     /// </summary>
     protected readonly HttpClientHandler DefaultChromiumHttpHandler;
     /// <summary>
+    /// Default HTTP client used for making HTTP requests.
+    /// This client can be customized via the options dictionary using the <see cref="ApplicationHttpClient"/> key,
+    /// otherwise a new instance of <see cref="HttpClient"/> is created with the default HTTP client handler.
+    /// </summary>
+    protected HttpClient DefaultHttpClient => _httpClientLazy.Value;
+    /// <summary>
+    /// Http client lazy initialization. 
+    /// This field is used to lazily initialize the default HTTP client when it is first accessed, 
+    /// ensuring that the client is only created when needed.
+    /// </summary>
+    private Lazy<HttpClient> _httpClientLazy;
+    /// <summary>
     /// Initializes a new instance of the <see cref="AbstractCrawlerAgent"/> class with the specified options.
     /// </summary>
     /// <param name="options">A dictionary of options to configure the crawler agent.</param>
@@ -141,14 +157,31 @@ public abstract partial class AbstractCrawlerAgent : IDisposable
             HttpClientDefaultUserAgent = GetKamiYomuUserAgent();
         }
 
-        DefaultFlareSolverrHttpHandler = ResolveHandler(options, FlareSolverrHttpHandler);
-        DefaultChromiumHttpHandler = ResolveHandler(options, ChromiumHttpHandler);
+        DefaultFlareSolverrHttpHandler = ResolveHandler(FlareSolverrHttpHandler);
+        DefaultChromiumHttpHandler = ResolveHandler(ChromiumHttpHandler);
         DefaultHttpClientHandler = ResolveFallbackHandler(
-            options,
             SmartCrawlerHttpHandler,
             FlareSolverrHttpHandler,
             ChromiumHttpHandler
         );
+
+        _httpClientLazy = new Lazy<HttpClient>(GetDefaultHttpClient);
+
+    }
+
+    protected virtual HttpClient GetDefaultHttpClient()
+    {
+        if (Options.TryGetValue(ApplicationHttpClient, out var httpClientObj) && httpClientObj is HttpClient client)
+        {
+            return client;
+        }
+        else
+        {
+            return new HttpClient(DefaultHttpClientHandler)
+            {
+                Timeout = TimeSpan.FromMilliseconds(TimeoutMilliseconds)
+            };
+        }
     }
 
     /// <summary>
@@ -157,11 +190,9 @@ public abstract partial class AbstractCrawlerAgent : IDisposable
     /// <param name="options">The dictionary of options to configure the HTTP client handler.</param>
     /// <param name="key">The key used to look up the HTTP client handler in the options dictionary.</param>
     /// <returns>The resolved HTTP client handler.</returns>
-    private static HttpClientHandler ResolveHandler(
-    IDictionary<string, object> options,
-    string key)
+    protected virtual HttpClientHandler ResolveHandler(string key)
     {
-        return options.TryGetValue(key, out object value) &&
+        return Options.TryGetValue(key, out object value) &&
                value is HttpClientHandler handler
             ? handler
             : new HttpClientHandler();
@@ -174,13 +205,11 @@ public abstract partial class AbstractCrawlerAgent : IDisposable
     /// <param name="options">The dictionary of options to configure the HTTP client handler.</param>
     /// <param name="keys">The keys used to look up the HTTP client handler in the options dictionary.</param>
     /// <returns>The resolved HTTP client handler.</returns>
-    private static HttpClientHandler ResolveFallbackHandler(
-    IDictionary<string, object> options,
-    params string[] keys)
+    protected virtual HttpClientHandler ResolveFallbackHandler(params string[] keys)
     {
         foreach (string key in keys)
         {
-            if (options.TryGetValue(key, out object value) &&
+            if (Options.TryGetValue(key, out object value) &&
                 value is HttpClientHandler handler)
             {
                 return handler;
@@ -259,6 +288,11 @@ public abstract partial class AbstractCrawlerAgent : IDisposable
             DefaultHttpClientHandler?.Dispose();
             DefaultFlareSolverrHttpHandler?.Dispose();
             DefaultChromiumHttpHandler?.Dispose();
+
+            if (_httpClientLazy.IsValueCreated)
+            {
+                DefaultHttpClient?.Dispose();
+            }
         }
         _disposed = true;
     }

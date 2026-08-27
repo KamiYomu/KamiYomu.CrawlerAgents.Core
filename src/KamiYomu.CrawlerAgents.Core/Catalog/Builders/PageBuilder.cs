@@ -11,6 +11,14 @@ public class PageBuilder
     /// <summary>
     /// Creates a new <see cref="PageBuilder"/> instance.
     /// </summary>
+    /// <returns>A new builder for constructing a <see cref="Page"/>.</returns>
+    public static PageBuilder Create()
+    {
+        return Create(null);
+    }
+    /// <summary>
+    /// Creates a new <see cref="PageBuilder"/> instance.
+    /// </summary>
     /// <param name="page">An optional existing <see cref="Page"/> to initialize the builder with.</param>
     /// <returns>A new builder for constructing a <see cref="Page"/>.</returns>
     public static PageBuilder Create(Page page = null)

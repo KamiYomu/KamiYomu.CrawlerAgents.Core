@@ -16,6 +16,14 @@ public class MangaBuilder
     /// <summary>
     /// Creates a new <see cref="MangaBuilder"/> instance.
     /// </summary>
+    /// <returns>A new builder for constructing a <see cref="Manga"/>.</returns>
+    public static MangaBuilder Create()
+    {
+        return Create(null);
+    }
+    /// <summary>
+    /// Creates a new <see cref="MangaBuilder"/> instance.
+    /// </summary>
     /// <param name="manga">An optional existing <see cref="Manga"/> to initialize the builder with.</param>
     /// <returns>A new builder for constructing a <see cref="Manga"/>.</returns>
     public static MangaBuilder Create(Manga manga = null)

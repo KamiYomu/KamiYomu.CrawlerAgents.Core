@@ -12,7 +12,14 @@ public class PagedResultBuilder<T> where T : class
     /// Initializes a new instance of the <see cref="PagedResultBuilder{T}"/> class.
     /// </summary>
     private PagedResultBuilder() { }
-
+    /// <summary>
+    /// Creates a new <see cref="PagedResultBuilder{T}"/> instance.
+    /// </summary>
+    /// <returns>A new builder for constructing a <see cref="PagedResult{T}"/>.</returns>
+    public static PagedResultBuilder<T> Create()
+    {
+        return Create(null);
+    }
     /// <summary>
     /// Creates a new <see cref="PagedResultBuilder{T}"/> instance.
     /// </summary>

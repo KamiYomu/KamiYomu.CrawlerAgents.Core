@@ -10,7 +10,15 @@ public class ChapterBuilder
 {
     private Chapter _chapter = new();
     private ChapterBuilder() { }
-
+    /// <summary>
+    /// Creates a new <see cref="ChapterBuilder"/> instance.
+    /// </summary>
+    /// <param name="chapter">An optional existing <see cref="Chapter"/> to initialize the builder with.</param>
+    /// <returns>A new builder for constructing a <see cref="Chapter"/>.</returns>
+    public static ChapterBuilder Create()
+    {
+        return Create(null);
+    }
     /// <summary>
     /// Creates a new <see cref="ChapterBuilder"/> instance.
     /// </summary>

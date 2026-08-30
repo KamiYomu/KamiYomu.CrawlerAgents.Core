@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace KamiYomu.CrawlerAgents.Core;
+﻿namespace KamiYomu.CrawlerAgents.Core;
 /// <summary>
 /// Download headers interface for crawler agents, 
 /// providing a mechanism to retrieve default HTTP headers used in requests to the target site.

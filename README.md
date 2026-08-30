@@ -1,126 +1,452 @@
-﻿KamiYomu Crawler Agent Core — Create Crawler Agents for KamiYomu
-================================================================
+﻿# KamiYomu Crawler Agent Core — Create Crawler Agents for KamiYomu
 
 A small foundational library and set of conventions for building, extending, and integrating custom crawler agents within the KamiYomu ecosystem. It provides lifecycle abstractions, utilities, and optional integrations for scraping HTML and controlling headless browsers.
 
-Key features
-------------
-- Agent lifecycle hooks for crawling and metadata extraction.
-- Integration-ready with the KamiYomu runtime.
-- Built-in examples and helpers for `HtmlAgilityPack` and `PuppeteerSharp`.
-- Compatible with `.net-8.0` to maximize host compatibility (works from modern .NET SDKs, including .NET 8).
+## Key Features
 
-Quick start
------------
-1. Create a class library project (target `net-8.0` for widest compatibility):
-    
-    Create project:
-    
-        dotnet new classlib -n MyKamiYomuAgent -f net-8.0
+- 🔄 Crawler Agent lifecycle hooks for crawling and metadata extraction
+- 🔌 Integration-ready with the KamiYomu runtime
+- 🛠️ Built-in helpers for `HtmlAgilityPack` and `PuppeteerSharp`
+- 🎯 Compatible with `.NET 8.0` for maximum host compatibility
 
-2. Add NuGet.Config in the solution folder to ensure standard feeds:
+## Getting Started
 
-    NuGet.Config content (place next to your `.sln`):
-    
-        <?xml version="1.0" encoding="utf-8"?>
-        <configuration>
-          <packageSources>
-            <clear />
-            <add key="nuget.org" value="https://api.nuget.org/v3/index.json" />
-          </packageSources>
-        </configuration>
+Choose one of the two approaches below:
 
-3. Install the core package:
+### Option 1: Use the Template (Recommended) ⭐
 
-        dotnet add package KamiYomu.CrawlerAgents.Core
+The fastest way to get started is to use the official template repository, which includes:
+- Pre-configured project structure
+- Sample implementations
+- Built-in validator tool (`KamiYomu.CrawlerAgents.ConsoleApp`)
+- Best practices already applied
 
-4. Make your package discoverable by KamiYomu (add `PackageTags` to your `.csproj`):
+**Steps:**
 
-    Add inside your `.csproj`:
+1. Clone the template repository:
 
-        <PropertyGroup>
-		    <PackageTags>crawler-agents;manga-download</PackageTags>
-        </PropertyGroup>
+	```bash
+	git clone https://github.com/KamiYomu/KamiYomu.CrawlerAgents.Sample.git
+	cd KamiYomu.CrawlerAgents.Sample
+	```
 
-5. Implement your agent
-    - Create a class that implements `ICrawlerAgent` from the `KamiYomu.CrawlerAgents.Core` namespace.
-    - Implement required lifecycle methods (crawl, extract metadata, etc.). The interface defines how KamiYomu will call your agent.
+2. Follow the instructions in the template's `README.md` to customize it for your source
 
-Validate and test locally
--------------------------
-- Use the validator repository to confirm your implementation meets KamiYomu requirements:
-  - https://github.com/KamiYomu/KamiYomu.CrawlerAgents.Validator
+3. Use the included validator project to ensure compliance:
 
-- Local testing: you do not need to publish to a remote feed. You can build a `.nupkg` and upload it into KamiYomu.Web for testing.
+	```bash
+	cd src/KamiYomu.CrawlerAgents.ConsoleApp
+	dotnet run
+	```
 
-Packaging and publishing
-------------------------
-- Build a distributable package:
+4. Renaming the project and namespaces to match your source is recommended for clarity. Using the template name as `[DeveloperName].CrawlerAgents.[SourceName]`
 
-        dotnet pack -c Release
+5. Once validated, proceed to [Packaging and Publishing](#packaging-and-publishing)
 
-- To automatically generate a NuGet package for Debug builds, add to your `.csproj`:
+### Option 2: Create from Scratch
 
-        <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-            <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-        </PropertyGroup>
+If you prefer to build your crawler agent from scratch, follow this step-by-step tutorial:
 
-- Publish to a feed accessible by KamiYomu.Web (Nuget.org, GitHub Packages, Azure Artifacts, private feed, or local folder).
-- To test without a feed, upload the generated `.nupkg` directly into KamiYomu.Web.
+#### Step 1: Create the Project
 
-Debugging an installed agent
-----------------------------
-- Place the `.pdb` alongside the agent DLL inside the agent folder (e.g. `/AppData/agents/{your.package}/lib/net8.0/`) to enable source-level debugging when running inside KamiYomu.Web.
+Create a new class library project targeting `.NET 8.0`:
 
-Packaging notes
----------------
-- Ensure your package includes necessary runtime assets and dependencies.
-- Keep the public API surface minimal and document required configuration and permissions.
+```bash
+dotnet new classlib -n [YourName].CrawlerAgents.[SourceName] -f net8.0
+cd [YourName].CrawlerAgents.[SourceName]
+```
 
-Commands summary
-----------------
-- Create project:
-    
-        dotnet new classlib -n MyKamiYomuAgent -f net8.0
+Replace:
+- `[YourName]` with your name or organization (e.g., `MyCompany`)
+- `[SourceName]` with the manga source name (e.g., `MangaHub`)
 
-- Add package:
+#### Step 2: Configure NuGet Package Source
 
-        dotnet add package KamiYomu.CrawlerAgents.Core
+Create a `NuGet.Config` file in your solution root (next to the `.sln` file):
 
-- Build Release package:
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <packageSources>
+	<clear />
+	<add key="nuget.org" value="https://api.nuget.org/v3/index.json" />
+  </packageSources>
+</configuration>
+```
 
-        dotnet pack -c Release
+#### Step 3: Install the Core Package
 
-- Enable package on Debug build:
+Add the KamiYomu Crawler Agents Core package:
 
-        Add `<GeneratePackageOnBuild>True</GeneratePackageOnBuild>` under Debug condition in `.csproj`
+```bash
+dotnet add package KamiYomu.CrawlerAgents.Core
+```
 
-Dependencies
-------------
-| Package         | Version |
-|-----------------|---------|
-| HtmlAgilityPack | 1.12.4  |
-| PuppeteerSharp  | 20.2.4  |
+#### Step 4: Create Your Crawler Agent Class
 
-Contributing
-------------
-- Follow repository coding conventions and include unit tests for new behavior.
-- Use the validator repo above to confirm compliance before publishing.
-- Open issues or pull requests against the core repository with clear descriptions and reproducible examples.
+Create a new class file (e.g., `MyMangaCrawlerAgent.cs`) that implements the required interfaces:
 
-License
--------
-This project is licensed under the GNU General Public License v3.0 (GPL-3.0). See the `LICENSE` file for full terms.
+```csharp
+using KamiYomu.CrawlerAgents.Core;
+using KamiYomu.CrawlerAgents.Core.Catalog;
+using KamiYomu.CrawlerAgents.Core.Inputs;
 
-Support / Contact
------------------
-- Repo: https://github.com/KamiYomu/KamiYomu.CrawlerAgents.Core
-- For integration or runtime questions, open an issue on the repository.
+namespace YourName.CrawlerAgents.SourceName
+{
+	public class MyMangaCrawlerAgent : AbstractCrawlerAgent, IDefaultHeadersCrawlerAgent
+	{
+		public string AgentName => "Your Manga Source";
+		public string SourceUrl => "https://www.yourmangasource.com";
 
-Changelog
----------
-- See repository Releases for version-specific notes.
+		public IEnumerable<KeyValuePair<string, string>> GetDefaultHeaders()
+		{
+			return new Dictionary<string, string>
+			{
+				{ "User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36" }
+			};
+		}
 
-Copyright
----------
-© KamiYomu. Licensed under GPL-3.0.
+		public override Task<Uri> GetFaviconAsync(CancellationToken cancellationToken)
+		{
+			// Return the favicon URL of your manga source
+			return Task.FromResult(new Uri("https://www.yourmangasource.com/favicon.ico"));
+		}
+
+		public override Task<PagedResult<Manga>> SearchAsync(
+			string titleName, 
+			PaginationOptions paginationOptions, 
+			CancellationToken cancellationToken)
+		{
+			// Implement your search logic here
+			throw new NotImplementedException();
+		}
+
+		public override Task<Manga> GetByIdAsync(string id, CancellationToken cancellationToken)
+		{
+			// Retrieve manga by ID
+			throw new NotImplementedException();
+		}
+
+		public override Task<PagedResult<Chapter>> GetChaptersAsync(
+			Manga manga, 
+			PaginationOptions paginationOptions, 
+			CancellationToken cancellationToken)
+		{
+			// Fetch chapters for a manga
+			throw new NotImplementedException();
+		}
+
+		public override Task<IEnumerable<Page>> GetChapterPagesAsync(
+			Chapter chapter, 
+			CancellationToken cancellationToken)
+		{
+			// Fetch pages for a chapter
+			throw new NotImplementedException();
+		}
+	}
+}
+```
+
+#### Step 5: Configure Your Project
+
+Update your `.csproj` file to include package metadata:
+
+```xml
+<PropertyGroup>
+  <TargetFramework>net8.0</TargetFramework>
+  <PackageTags>kamiyomu;kamiyomu-crawler-agents;manga-download;[SourceName]</PackageTags>
+</PropertyGroup>
+```
+
+**For NSFW content sources**, add the `nsfw` tag:
+
+```xml
+<PropertyGroup>
+  <TargetFramework>net8.0</TargetFramework>
+  <PackageTags>kamiyomu;kamiyomu-crawler-agents;manga-download;[SourceName];nsfw</PackageTags>
+</PropertyGroup>
+```
+
+#### Step 6: Implement the Methods
+
+Now implement each method based on your manga source's API or website structure:
+
+**Available Helper Classes:**
+- `PageBuilder` - Build page objects
+- `ChapterBuilder` - Build chapter objects
+- `MangaBuilder` - Build manga objects
+- `PagedResultBuilder` - Build paginated results
+- `HttpClientExtensions` - HTTP client utilities
+
+#### Step 7: Test Locally
+
+Build and test your agent:
+
+```bash
+dotnet build
+dotnet run
+```
+
+## Interface Reference
+
+### ICrawlerAgent
+
+The core interface that all crawler agents must implement. Required methods:
+
+- **`GetFaviconAsync(CancellationToken)`** → `Task<Uri>`
+  - Retrieve the favicon URI for your manga source
+
+- **`SearchAsync(titleName, paginationOptions, CancellationToken)`** → `Task<PagedResult<Manga>>`
+  - Search for manga by title, supporting pagination or continuation tokens
+
+- **`GetByIdAsync(id, CancellationToken)`** → `Task<Manga>`
+  - Retrieve detailed manga information by unique identifier
+
+- **`GetChaptersAsync(manga, paginationOptions, CancellationToken)`** → `Task<PagedResult<Chapter>>`
+  - Retrieve paginated chapters for a specific manga
+
+- **`GetChapterPagesAsync(chapter, CancellationToken)`** → `Task<IEnumerable<Page>>`
+  - Retrieve all pages in a chapter
+
+### IDefaultHeadersCrawlerAgent
+
+Provides HTTP headers for requests to your manga source:
+
+- **`GetDefaultHeaders()`** → `IEnumerable<KeyValuePair<string, string>>`
+  - Return default HTTP headers (User-Agent, Authorization, etc.)
+  - These headers are used for all requests and file downloads
+
+## Validation and Testing
+
+After implementing your crawler agent, validate it with the test project:
+
+1. Clone the validator from the template repository (if you created from scratch):
+
+	```bash
+	git clone https://github.com/KamiYomu/KamiYomu.CrawlerAgents.Sample.git
+	cd KamiYomu.CrawlerAgents.Sample/src/KamiYomu.CrawlerAgents.ConsoleApp
+	```
+
+2. Configure it to reference your agent package
+
+3. Run the validation:
+
+	```bash
+	dotnet run
+	```
+
+The validator will confirm that your agent meets KamiYomu's requirements before publishing.
+
+## Packaging and Publishing
+
+### Build a Distributable Package
+
+Create a release build:
+
+```bash
+dotnet pack -c Release
+```
+
+This generates a `.nupkg` file in your `bin/Release` folder.
+
+### Enable Automatic Package Generation for Debug Builds
+
+Optionally, add this to your `.csproj` to auto-generate packages during debug builds:
+
+```xml
+<PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+  <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+</PropertyGroup>
+```
+
+### Publish Your Package
+
+Choose one of the following options:
+
+1. **NuGet.org** (Public)
+   - Register at https://www.nuget.org
+   - Push your package: `dotnet nuget push [DeveloperName].CrawlerAgents.[SourceName].nupkg --api-key [YOUR_API_KEY] --source https://api.nuget.org/v3/index.json`
+
+2. **GitHub Packages**
+   - Configure GitHub Actions to auto-publish
+   - Set up authentication in your workflow
+
+3. **Azure Artifacts**
+   - Create a private feed
+   - Configure your NuGet.Config for authentication
+
+4. **Local Testing** (Without Publishing)
+   - Place the `.nupkg` directly in KamiYomu.Web's agent folder
+   - Or upload via the KamiYomu.Web UI
+
+### Packaging Checklist
+
+- ✅ Ensure your package includes all necessary runtime assets
+- ✅ Include all dependencies in the package
+- ✅ Keep the public API minimal and well-documented
+- ✅ Document any required configuration or permissions
+- ✅ Version your package following semantic versioning
+
+## Debugging
+
+### Debug an Installed Agent
+
+To debug your agent while running in KamiYomu.Web:
+
+1. Build your project in Debug mode
+2. Locate the generated `.pdb` file
+3. Place it alongside the agent DLL in the agent folder:
+   ```
+   /AppData/agents/{[DeveloperName].CrawlerAgents.[SourceName]}/lib/net8.0/
+   ```
+4. KamiYomu.Web will now use source-level debugging
+
+## Configuration Options
+
+### Using HTML Scraping (HtmlAgilityPack)
+
+The library includes helpers for `HtmlAgilityPack`:
+
+```csharp
+using HtmlAgilityPack;
+
+public override async Task<PagedResult<Manga>> SearchAsync(
+	string titleName, 
+	PaginationOptions paginationOptions, 
+	CancellationToken cancellationToken)
+{
+	var doc = new HtmlDocument();
+	// Load and parse HTML...
+
+	// Build results with MangaBuilder
+	var manga = new MangaBuilder()
+		.WithId("123")
+		.WithTitle("Example Manga")
+		.Build();
+
+	return new PagedResultBuilder<Manga>()
+		.WithItems(new[] { manga })
+		.Build();
+}
+```
+
+### Using Headless Browser (PuppeteerSharp)
+
+For JavaScript-heavy websites:
+
+```csharp
+using PuppeteerSharp;
+
+public override async Task<IEnumerable<Page>> GetChapterPagesAsync(
+	Chapter chapter, 
+	CancellationToken cancellationToken)
+{
+	await new BrowserFetcher().DownloadAsync();
+	var browser = await Puppeteer.LaunchAsync(new LaunchOptions { Headless = true });
+	// Navigate and extract pages...
+
+	return pages;
+}
+```
+
+## API Reference
+
+### Data Models
+
+- **`Manga`** - Represents a manga title
+- **`Chapter`** - Represents a chapter of a manga
+- **`Page`** - Represents a page/image in a chapter
+- **`PagedResult<T>`** - Pagination wrapper for search and listing results
+
+### Builder Classes
+
+Use builders to simplify object creation:
+
+- **`MangaBuilder`** - Create manga objects fluently
+- **`ChapterBuilder`** - Create chapter objects fluently
+- **`PageBuilder`** - Create page objects fluently
+- **`PagedResultBuilder<T>`** - Create paginated results fluently
+
+### Utilities
+
+- **`HttpClientExtensions`** - Helper methods for HTTP requests with proper headers
+
+## Quick Reference Commands
+
+```bash
+# Create new project
+dotnet new classlib -n [DeveloperName].CrawlerAgents.[SourceName] -f net8.0
+
+# Add core package
+dotnet add package KamiYomu.CrawlerAgents.Core
+
+# Build project
+dotnet build
+
+# Build release package
+dotnet pack -c Release
+
+# Publish to NuGet (after registering)
+dotnet nuget push bin/Release/[DeveloperName].CrawlerAgents.[SourceName].nupkg --api-key [KEY] --source https://api.nuget.org/v3/index.json
+```
+
+## Dependencies
+
+| Package         | Version | Purpose                              |
+|-----------------|---------|--------------------------------------|
+| HtmlAgilityPack | 1.12.4  | HTML parsing and scraping            |
+| PuppeteerSharp  | 20.2.4  | Headless browser automation          |
+
+These are optional - only add them if your agent needs their functionality.
+
+## Troubleshooting
+
+### My agent isn't being discovered by KamiYomu.Web
+
+- ✅ Verify the package name follows: `*.CrawlerAgents.*`
+- ✅ Confirm `PackageTags` include `kamiyomu;kamiyomu-crawler-agents;`
+- ✅ Check that your class implements both `ICrawlerAgent` and `IDefaultHeadersCrawlerAgent`
+- ✅ Ensure the package is installed in KamiYomu.Web's agent folder
+
+### HTTP requests are being blocked
+
+- ✅ Check `GetDefaultHeaders()` returns proper User-Agent
+- ✅ Add authorization headers if the source requires authentication
+- ✅ Respect rate limiting and delays between requests
+
+### Validation tests are failing
+
+- ✅ Run the validator project from the template repository
+- ✅ Fix any compliance issues reported
+- ✅ Ensure all interface methods are properly implemented
+
+## Contributing
+
+Contributions are welcome! Please:
+
+1. Follow the existing code style and conventions
+2. Include unit tests for new functionality
+3. Use the validator project to confirm compliance before submitting
+4. Submit clear pull requests with reproducible examples
+5. Update documentation if adding new features
+
+## Resources
+
+- **Template Repository**: https://github.com/KamiYomu/KamiYomu.CrawlerAgents.Sample
+- **Core Library**: https://github.com/KamiYomu/KamiYomu.CrawlerAgents.Core
+- **Issues & Support**: Open an issue on the repository for questions or bugs
+- **KamiYomu Main Project**: https://github.com/KamiYomu/KamiYomu
+
+## License
+
+This project is licensed under the **MIT License**. 
+
+See the `LICENSE` file for full terms.
+
+## Copyright
+
+© KamiYomu. Licensed under AGPL-3.0.
+
+---
+
+**Ready to build?** Start with [Option 1 (Template)](#option-1-use-the-template-recommended-) for the quickest path, or [Option 2 (From Scratch)](#option-2-create-from-scratch) if you prefer learning the full structure!

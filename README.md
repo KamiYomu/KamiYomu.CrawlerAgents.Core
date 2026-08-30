@@ -5,6 +5,8 @@ A small foundational library and set of conventions for building, extending, and
 ## Key Features
 
 - 🔄 Crawler Agent lifecycle hooks for crawling and metadata extraction
+- 🌐 **Smart HTTP Client** with automatic fallback chain (HTTP → FlareSolverr → PuppeteerSharp)
+- 📡 **Enriched Headers & Auto-Retry** - Built-in headers to prevent failures and configurable timeouts
 - 🔌 Integration-ready with the KamiYomu runtime
 - 🛠️ Built-in helpers for `HtmlAgilityPack` and `PuppeteerSharp`
 - 🎯 Compatible with `.NET 8.0` for maximum host compatibility
@@ -112,35 +114,47 @@ namespace YourName.CrawlerAgents.SourceName
 			return Task.FromResult(new Uri("https://www.yourmangasource.com/favicon.ico"));
 		}
 
-		public override Task<PagedResult<Manga>> SearchAsync(
+		public override async Task<PagedResult<Manga>> SearchAsync(
 			string titleName, 
 			PaginationOptions paginationOptions, 
 			CancellationToken cancellationToken)
 		{
-			// Implement your search logic here
+			// Use DefaultHttpClient for HTTP requests
+			var url = $"https://www.yourmangasource.com/search?q={Uri.EscapeDataString(titleName)}";
+			var response = await DefaultHttpClient.GetAsync(url, cancellationToken);
+			// Parse response and return results
 			throw new NotImplementedException();
 		}
 
-		public override Task<Manga> GetByIdAsync(string id, CancellationToken cancellationToken)
+		public override async Task<Manga> GetByIdAsync(string id, CancellationToken cancellationToken)
 		{
-			// Retrieve manga by ID
+			// Use DefaultHttpClient to retrieve manga by ID
+			var url = $"https://www.yourmangasource.com/manga/{id}";
+			var response = await DefaultHttpClient.GetAsync(url, cancellationToken);
+			// Parse response and return manga
 			throw new NotImplementedException();
 		}
 
-		public override Task<PagedResult<Chapter>> GetChaptersAsync(
+		public override async Task<PagedResult<Chapter>> GetChaptersAsync(
 			Manga manga, 
 			PaginationOptions paginationOptions, 
 			CancellationToken cancellationToken)
 		{
-			// Fetch chapters for a manga
+			// Use DefaultHttpClient to fetch chapters
+			var url = $"https://www.yourmangasource.com/manga/{manga.Id}/chapters";
+			var response = await DefaultHttpClient.GetAsync(url, cancellationToken);
+			// Parse response and return chapters
 			throw new NotImplementedException();
 		}
 
-		public override Task<IEnumerable<Page>> GetChapterPagesAsync(
+		public override async Task<IEnumerable<Page>> GetChapterPagesAsync(
 			Chapter chapter, 
 			CancellationToken cancellationToken)
 		{
-			// Fetch pages for a chapter
+			// Use DefaultHttpClient to fetch pages
+			var url = $"https://www.yourmangasource.com/chapter/{chapter.Id}";
+			var response = await DefaultHttpClient.GetAsync(url, cancellationToken);
+			// Parse response and return pages
 			throw new NotImplementedException();
 		}
 	}
@@ -188,6 +202,62 @@ dotnet run
 ```
 
 ## Interface Reference
+
+### HTTP Client & Request Handling
+
+The KamiYomu Crawler Agents Core provides a **robust default HTTP client** that handles complex scraping scenarios automatically. You don't need to worry about implementing custom HTTP logic—the framework takes care of it.
+
+#### Smart Fallback Chain
+
+The HTTP client uses an intelligent fallback mechanism to ensure requests succeed:
+
+1. **Standard HTTP Client** (First attempt)
+   - Fast, lightweight requests for most websites
+   - Includes enriched headers (User-Agent, Accept, etc.)
+   - Respects configured timeout and retry policies
+
+2. **FlareSolverr Fallback** (If standard HTTP fails)
+   - Automatically handles Cloudflare protection and similar challenges
+   - Transparently processes JavaScript-protected content
+   - No configuration needed—it just works
+
+3. **PuppeteerSharp Browser Fallback** (If both above fail)
+   - Full headless browser support for complex dynamic content
+   - Handles JavaScript rendering, cookies, and sessions
+   - Used as a last resort for maximum compatibility
+
+#### Built-in Features
+
+- **Enriched Headers**: Automatically includes realistic browser headers to avoid common blocking patterns
+- **Timeout Configuration**: Configurable request timeouts with sensible defaults
+- **Automatic Retries**: Retry logic built-in to handle transient failures
+- **Default Headers Integration**: Your `IDefaultHeadersCrawlerAgent.GetDefaultHeaders()` are automatically merged with framework headers
+
+#### Usage Example
+
+Simply use the `DefaultHttpClient` property provided by the framework—no special configuration needed:
+
+```csharp
+public override async Task<PagedResult<Manga>> SearchAsync(
+	string titleName, 
+	PaginationOptions paginationOptions, 
+	CancellationToken cancellationToken)
+{
+	var url = $"https://yourmangasource.com/search?q={Uri.EscapeDataString(titleName)}";
+
+	// Use DefaultHttpClient which automatically handles:
+	// - Your custom headers (from GetDefaultHeaders())
+	// - Enriched browser-like headers
+	// - Fallback to FlareSolverr if needed
+	// - Fallback to PuppeteerSharp if FlareSolverr fails
+	// - Timeout management and automatic retries
+	var response = await DefaultHttpClient.GetAsync(url, cancellationToken);
+	var html = await response.Content.ReadAsStringAsync(cancellationToken);
+
+	// Parse and return results
+	return ParseResults(html);
+}
+```
 
 ### ICrawlerAgent
 
@@ -302,6 +372,13 @@ To debug your agent while running in KamiYomu.Web:
 4. KamiYomu.Web will now use source-level debugging
 
 ## Configuration Options
+
+### Fetch Data via DefaultHttpClient
+The `DefaultHttpClient` is provided by the core library and can be used for making HTTP requests with default headers and proper configuration.
+KamiYomu will provide a pre-configured `HttpClient` instance to your agent, which you can use for all requests.
+This DefaultHttpClient will be pre configured to use the cloudflare bypass and other necessary headers for scraping.
+and Also using a request by browser using the puppeteer sharp library for scraping the data from the website.
+
 
 ### Using HTML Scraping (HtmlAgilityPack)
 

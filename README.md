@@ -437,6 +437,19 @@ Contributions are welcome! Please:
 - **Issues & Support**: Open an issue on the repository for questions or bugs
 - **KamiYomu Main Project**: https://github.com/KamiYomu/KamiYomu
 
+## Community
+
+Join the conversation and be part of the KamiYomu community:
+
+| Action | Link |
+| :--- | :--- |
+| **Following** | [![GitHub followers](https://img.shields.io/github/followers/kamiyomu)](https://github.com/orgs/KamiYomu/followers) |
+| **Discord** | [![Join the discord](https://img.shields.io/discord/1468597233032101942)](https://discord.gg/b9zwEEejsJ) |
+| **Sponsor** | [![GitHub Sponsors](https://img.shields.io/github/sponsors/kamiyomu?logo=github&label=Sponsor)](https://github.com/sponsors/kamiyomu) |
+| **Report** | [![GitHub issues](https://img.shields.io/github/issues/kamiyomu/KamiYomu.CrawlerAgents.Core?logo=github&label=Issues)](https://github.com/kamiyomu/KamiYomu.CrawlerAgents.Core/issues) |
+| **Contribute** | [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?logo=github)](https://github.com/KamiYomu/KamiYomu.CrawlerAgents.Core/pulls) |
+
+
 ## License
 
 This project is licensed under the **MIT License**. 
